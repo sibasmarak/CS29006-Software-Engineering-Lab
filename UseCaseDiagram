@@ -1,0 +1,95 @@
+@startuml
+
+left to right direction
+skinparam packageStyle rectangle
+
+actor Admin
+actor User
+actor Author
+
+rectangle "                                                                                                                                                                                                                 Write-Your-Thoughts"{
+
+'+++++++++GENERALIZE AUTHOR AND ADMIN TO USER++++++++++'
+User <|-- Author
+User <|-- Admin
+
+'++++++++APPROVE WORK BY ADMIN+++++++++++'
+usecase Approve as "Approve the work
+--
+Approve the new work posted by authors"
+Admin -- (Approve)
+
+'++++++++++REFRESH_UPDATE++++++++++++'  
+usecase Refresh_Update as "Refresh/Update
+--
+Update the admin page per month"
+' Admin -- (Refresh_Update)
+
+rectangle Refresh_Update{
+usecase UpdateAdminPage as "Update Admin Page
+--
+Update the top works of the work"
+
+usecase Ranking as "Ranking
+--
+Rank on the basis of:
+1. Author Rating
+2. Genre-wise Rating
+3. Work rating"
+
+}
+
+'++++++++++ RATE ++++++++++'
+usecase Rate as "Rate
+--
+Rate the work user has read"
+User ---- (Rate)
+
+'++++++++ SUBSCRIBING AUTHORS ++++++++'
+usecase Subscribe_Authors
+User ---- Subscribe_Authors
+
+
+'++++++++ LOGIN ++++++++'
+usecase Login as "Login
+--
+Enter credentials to login"
+User ----- Login
+
+'++++++++ AUTHOR SEARCH ++++++++'
+usecase Search as "Search
+--
+Search the author/work in the search bar"
+User --- Search
+
+'++++++++ CREATE ACCOUNT +++++++'
+usecase CreateAccount as "Create Account
+--
+Enter details to create an account"
+User --- CreateAccount
+
+'+++++++ POST WORK ++++++'
+usecase PostWork as "Post Work
+--
+Post work for Admin's approval
+"
+Author ---- PostWork
+
+'++++++++++ SEND NOTIFICATION +++++++'
+usecase SendNotification as "Send Notification
+--
+Notify the subscribers"
+
+  Admin - (Maintain or Check System)
+  ' Admin --  (Refresh_Update)
+  (Refresh_Update) .> (Maintain or Check System) : <<extend>> 
+  (Refresh_Update) ..> (Ranking) :  <<include>>
+  Login ..> (Checking Database) : <<include>>
+  Search ..> (Checking Database) : <<include>>
+  (Refresh_Update) ..> (UpdateAdminPage):  <<include>>
+  ' (Ranking) ..> (Rate): extends
+  ' PostWork .> Approve: <<include>>
+  Approve .> SendNotification: <<include>>
+}
+
+@enduml
