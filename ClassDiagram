@@ -1,0 +1,110 @@
+@startuml
+
+left to right direction
+skinparam packageStyle rectangle
+
+rectangle "                                                                                                                                                                                                                 Write-Your-Thoughts"{
+
+' ++++++++++ USER CLASS ++++++++++
+class User {
+   - isAuthor : Boolean
+   - isAdmin : Boolean
+   - userPhoto : String
+   - username : String
+   - password : String
+   - address : String
+   - email : String
+   - subscribed : List<Integer>[]
+   -- encrypted --
+   - password : String
+   __
+   .. Getter Methods ..
+  + getUser_name() : String
+  + getAddress() : String
+  + getEmail() : String 
+  + getSubscribed() : List
+  + getIsAuthor() : Boolean
+  + getIsAdmin() : Boolean
+  
+  .. Other Operations ..
+  + updateSubscribedList( List oldList ) : List
+  + convertToAuthor() : void
+  + subscribeAuthor( String author_ID ) : void
+}
+
+' ++++++++++ AUTHOR CLASS ++++++++++
+class Author {
+    - penName : String
+    - isBlogAvailable : Boolean
+    - blogLinks : String[]
+    - authorID : String
+    - rating : float
+    - subscribersNum : int
+    - numSubmissions : int
+    __
+    .. Getter Methods ..
+  + getRating() : float
+  + getBlogLinks() : String[]
+  + getAuthorID() : String 
+  + getPenName() : String
+  + getNumSubmissions() : int
+  + getSubscribersNum() : int
+  
+  .. Other Operations ..
+  + createPost() : void
+  + updateBlogLink(String[] blogLinks) : void
+  
+}
+
+' ++++++++++ ADMIN CLASS ++++++++++
+class Admin{
+    + verifyWork(String workID) : Boolean
+    + updateRanking() : void
+    + updateAdminPage() : void
+
+}
+
+' ++++++++++ WORK CLASS ++++++++++
+class Work{
+    - workID : String
+    - title : String
+    - authorID : String
+    - category : String
+    - genre : String[]
+    - views : int
+    - rank : int
+    - rating : float
+    - numRated : int
+    
+__
+    .. Getter Methods ..
+  + getRank() : int
+  + getTitle() : String
+  + getAuthorID() : String 
+  + getCategory() : String
+  + getGenre() : String[]
+  + getViews() : int
+  + getWorkID() : int
+  + getRating() : float
+  + getNumberRated() : int
+  
+  .. Other Operations ..
+  + rateOfPost() : float
+  + sendForAdminVerification() : Boolean
+  + rate() : void
+  + search() : String
+  + comment() : String
+  + updateNumRated() : int
+}
+
+
+
+User <|-- Author
+User <|-- Admin
+Author "1" *-- "1..*" Work : writes >
+Admin "1" o-- "1..*" Work : approves >
+User "*" o-- "1..*" Work : reads >
+
+}
+
+@enduml
