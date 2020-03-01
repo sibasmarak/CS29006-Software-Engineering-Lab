@@ -1,0 +1,35 @@
+@startuml
+
+title Subscribe Author
+skinparam sequenceArrowThickness 2
+' skinparam roundcorner 20
+' skinparam maxmessagesize 60
+skinparam sequenceParticipant underline
+
+participant "user:User" as User
+participant "author: Author" as Author
+database Database as Database
+
+activate User
+User -> Author: requestSubscribe(user)
+
+activate Author
+Author -> Database : allowAdd(user, author)
+
+activate Database
+Database -> Database++ : updateSubscribersAuthor(user, author)
+deactivate Database
+
+Database -> Database++ : updateSubscribedUser(user, author)
+deactivate Database
+
+Database --> Author : Added Successfully
+
+Author --> User : Successfully Subscribed
+
+deactivate Database
+deactivate Author
+deactivate User
+
+
+@enduml

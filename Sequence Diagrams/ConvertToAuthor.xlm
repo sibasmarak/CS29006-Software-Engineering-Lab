@@ -1,0 +1,41 @@
+@startuml
+
+title Convert To Author
+skinparam sequenceArrowThickness 2
+' skinparam roundcorner 20
+' skinparam maxmessagesize 60
+skinparam sequenceParticipant underline
+
+participant "user:User" as User
+participant "admin:Admin" as Admin
+database Database as Database
+
+activate User
+User -> Admin: requestChangeToAuthor(user)
+
+activate Admin
+Admin -> User : approved := postFirstWork()
+
+Admin --> User : [approved = False] Try Once Again
+
+Admin -> Database : [approved = True]updateUserToAuthor(user)
+
+activate Database
+Database -> Database++ : updateUserInfo(user)
+deactivate Database
+
+Database -> Database++ : updateAuthorList()
+deactivate Database
+
+
+
+Database --> Admin : User Converted to Author
+
+Admin --> User : Congratulations : You are now an Author
+
+deactivate Database
+deactivate Admin
+deactivate User
+
+
+@enduml

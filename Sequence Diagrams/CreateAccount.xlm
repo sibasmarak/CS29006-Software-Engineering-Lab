@@ -1,0 +1,63 @@
+@startuml
+
+title Create Account
+skinparam sequenceArrowThickness 2
+' skinparam roundcorner 20
+' skinparam maxmessagesize 60
+skinparam sequenceParticipant underline
+
+participant "user:User" as User
+participant ":Type" as Type
+participant "aConnector:Connector" as Connector
+database Database as Database
+
+activate User
+User -> Type: sendDetails(type)
+
+activate Type
+Type -> Connector : [type = User] sendDetails(user)
+activate Connector
+Connector -> Database : valueUser := checkDetails(user)
+
+activate Database
+Database -> Database++ : checkUserDetails(user)
+deactivate Database
+
+Connector --> User : [valueUser] Already Registered 
+
+Connector -> Database : [valueUser = False] register(user)
+
+Database -> Database++ : updateDatabase(user)
+deactivate Database
+
+Database --> Connector : User Added
+
+deactivate Database
+
+Connector --> User : Successful Registration
+
+Type -> Connector : [type = Author] sendDetails(author)
+
+Connector -> Database : valueAuthor := checkDetails(author)
+
+activate Database
+Database -> Database++ : checkAuthorDetails(author)
+deactivate Database
+
+Connector --> User : [valueAuthor] Already Registered 
+
+Connector -> Database : [valueAuthor = False] register(author)
+
+Database -> Database++ : updateDatabase(author)
+deactivate Database
+
+Database --> Connector : Author Added
+
+Connector --> User : requestPostFirstWork()
+deactivate Database
+deactivate Type
+deactivate Connector
+deactivate User
+
+
+@enduml

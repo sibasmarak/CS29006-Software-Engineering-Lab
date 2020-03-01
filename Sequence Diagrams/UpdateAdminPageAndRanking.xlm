@@ -1,0 +1,44 @@
+@startuml
+
+title Update Admin Page And Ranking
+skinparam sequenceArrowThickness 2
+' skinparam roundcorner 20
+' skinparam maxmessagesize 60
+skinparam sequenceParticipant underline
+
+participant "admin:Admin" as Admin
+database Database as Database
+
+activate Admin
+Admin -> Database: authorRatings := obtainAuthorRatings()
+
+activate Database
+Admin -> Admin++ : sortAuthorRatings(authorRatings) 
+deactivate Admin
+Admin -> Database : updateLeaderBoardAuthor(authorRatings)
+Database -> Database++ : updateDatabase(authorRatings)
+deactivate Database
+... ...
+Admin -> Database: genreWiseRatings := obtainGenreWiseRatings()
+Admin -> Admin++ : sortGenreWiseRatings(genreWiseRatings) 
+deactivate Admin
+Admin -> Database : updateLeaderBoardGenre(genreWiseRatings)
+Database -> Database++ : updateDatabase(genreWiseRatings)
+deactivate Database
+... ...
+
+Admin -> Database: workRatings := obtainWorkRatings()
+Admin -> Admin++ : sortWorkRatings(workRatings) 
+deactivate Admin
+Admin -> Database: updateLeaderBoardWork(workRatings)
+Database -> Database++ : updateDatabase(workRatings)
+deactivate Database
+deactivate Database
+... ...
+
+
+Admin -> Admin++ : updateAdminPageInfo()
+deactivate Admin
+deactivate Admin
+
+@enduml

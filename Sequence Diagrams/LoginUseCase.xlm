@@ -1,0 +1,31 @@
+@startuml
+
+title Login
+skinparam sequenceArrowThickness 2
+' skinparam roundcorner 20
+' skinparam maxmessagesize 60
+skinparam sequenceParticipant underline
+
+participant "user:User" as User
+' participant "aConnector:Connector" as Connector
+
+
+create "aConnector:Connector" as Connector
+
+User -> Connector: sendDetails()
+activate Connector
+
+database Database as Database
+Connector -> Database: userExist := sendUserDetails()
+activate Database
+
+Database -> Database++ : userID : found\n password: matched
+
+deactivate Database
+
+Connector --> User : [userExist = True]viewUserPage() 
+Connector --> User : [userExist = False]Register Or Re-Enter Login Details 
+deactivate Database
+deactivate Connector
+
+@enduml

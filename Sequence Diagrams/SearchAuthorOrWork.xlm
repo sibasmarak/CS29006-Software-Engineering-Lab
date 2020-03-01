@@ -1,0 +1,34 @@
+@startuml
+
+title Search Author Or Work
+skinparam sequenceArrowThickness 2
+' skinparam roundcorner 20
+' skinparam maxmessagesize 60
+skinparam sequenceParticipant underline
+
+participant "user:User" as User
+' participant "admin:Admin" as Admin
+database Database as Database
+
+
+activate User
+User -> Database: found := requestSearch(searchText) 
+activate Database
+
+Database -> Database++ : searchAuthorList(searchText)
+deactivate Database
+
+Database --> User : [found] displayAuthor()
+
+Database -> Database++ : [found = False]searchWorkList(searchText)
+deactivate Database
+
+Database --> User : [found] displayWork()
+
+Database --> User : [found = False] No Record Found
+
+
+deactivate Database
+deactivate User
+
+@enduml

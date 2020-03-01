@@ -1,0 +1,42 @@
+@startuml
+
+title Post And Work Approval
+skinparam sequenceArrowThickness 2
+' skinparam roundcorner 20
+' skinparam maxmessagesize 60
+skinparam sequenceParticipant underline
+
+participant "author:Author" as Author
+participant "admin:Admin" as Admin
+database Database as Database
+participant "Author's Subscribers" as Subscribers
+
+activate Author
+Author -> Admin: sendWorkAdminApproval(work)
+
+activate Admin
+Admin -> Admin++ : canPost := validatePost(work)
+deactivate Admin
+
+Admin --> Author : [canPost = False] Time/Length/Content Restriction
+
+Admin -> Database : [canPost] updateDatabase(work)
+
+activate Database
+Database -> Database++ : addNewWork(work)
+deactivate Database
+
+Database -> Database++ : updateAuthorData()
+deactivate Database
+
+Database --> Admin : Work Added
+
+Admin --> Author : Posted Successfully
+deactivate Database
+
+Admin -> Subscribers : sendNotification() : new work by author
+
+deactivate Admin
+deactivate Author
+
+@enduml
