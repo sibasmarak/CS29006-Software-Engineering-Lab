@@ -1,0 +1,38 @@
+@startuml
+
+title Login
+skinparam sequenceArrowThickness 2
+' skinparam roundcorner 20
+' skinparam maxmessagesize 60
+skinparam sequenceParticipant underline
+
+participant "user:User" as User
+participant "work:Work" as Work
+database Database as Database
+participant "anAuthor:Author" as Author
+
+activate User
+User -> Work: rateWork(rating)
+activate Work
+
+Work -> Database : updateRating(work)
+activate Database
+
+Database -> Database++ : updateRatingWork(work)
+deactivate Database
+
+Database -> Database++ : searchAndUpdateAuthor()
+deactivate Database
+
+Database -> Author : updateAuthorProfile()
+
+Database --> Work : Successful Updated Work and Author
+
+deactivate Database
+
+Work --> User : Thank You For Rating
+deactivate Work
+
+deactivate User
+
+@enduml
