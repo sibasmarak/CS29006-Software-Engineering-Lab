@@ -1,0 +1,39 @@
+@startuml
+hide empty description
+[*] --> Active
+
+state Active {
+    state "Approving Work" as ApprovingWork{
+    [*] --> Approving : /get next work
+    Approving : do/ approve work
+    Approving --> Approving : [all received work not approved]/get next work
+    Approving --> Posting : [all received work approved]
+    Posting : do/ post works
+    Posting -> Posted : posted
+    }
+ 
+  --
+  state "Updating" as Updating{
+  state "Updating Leaderboard" as UpdatingLeaderboard{
+  state "Collecting Ratings" as Collecting
+    [*] --> Collecting
+    Collecting : do/ collect ratings
+    Collecting --> updating : [all types of ratings collected]
+    updating : do/update leader board
+    updating --> Updated : updated
+  }
+  --
+    state "Updating Admin Page" as UpdatingAdminPage{
+    state "Collecting New Post" as Collecting_
+    [*] --> Collecting_
+    Collecting_ : do/ collect new posts for 
+    Collecting_ : posting in Admin Page monthly
+    Collecting_ --> Finding : [month's new post collected]
+    Finding : do/ find best work of the month 
+    Finding --> updated : sorted work ratings[found best works]/update page
+
+  }
+  }
+}
+
+@enduml
